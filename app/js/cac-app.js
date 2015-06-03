@@ -21,27 +21,37 @@ app.config(['$routeProvider', function($routeProvider){
 
 app.controller('countryCtrl', ['$http', '$scope', '$q', 'country', function($http, $scope, $q, country) {
   $scope.loading = true;
-  $http.get('http://api.geonames.org/countryInfoJSON?country='+country+'&username=danielrob', {cache: true}).success(function(data) {
-    console.log(data.geonames[0]);
-    $scope.ctry = data.geonames[0];
-    var p1 = $http.get('http://api.geonames.org/neighboursJSON?geonameId='+$scope.ctry.geonameId+'&username=danielrob', {cache: true}).success(function(data) {
-      console.log(data)
-      $scope.ctry.neighbours = data.geonames;
-    });
-    var p2 = $http.get('http://api.geonames.org/searchJSON?q='+$scope.ctry.capital+'&username=danielrob', {cache: true}).success(function(data) {
-      console.log(data.geonames[0])
-      $scope.ctry.capitalresolved = data.geonames[0];
-    });
-    $q.all([p1,p2]).then(function(){
-      console.log('here')
+
+  function getCountry(country){
+    return $http.get('http://api.geonames.org/countryInfoJSON?country='+country+'&username=danielrob', {cache: true});
+  }
+
+  function getNeighbours(countryGeonameId) {
+    return $http.get('http://api.geonames.org/neighboursJSON?geonameId='+$scope.ctry.geonameId+'&username=danielrob', {cache: true});
+  }
+
+  function getCapital(countryGeonameId) {
+    return $http.get('http://api.geonames.org/searchJSON?q='+$scope.ctry.capital+'&username=danielrob', {cache: true});
+  }
+
+  getCountry(country).then(function(response) {
+    console.log(response)
+    $scope.ctry = response.data.geonames[0];
+    $q.all([getNeighbours(),getCapital()]).then(function(responses){
+      console.log(responses[0])
+      console.log(responses[1])
+      $scope.ctry.neighbours = responses[0].geonames;
+      $scope.ctry.capitalresolved = responses[1].data.geonames[0];
       $scope.loading = false;
     });
-  });
+  })
+
+
 }]);
 
 app.controller('default', ['$scope', '$http', '$location', function($scope, $http, $location){ 
   $scope.loading = true;
-  $http.get('http://api.geonames.org/countryInfoJSON?username=danielrob', { cache: true}).success(function(data) {
+  $http.get('http://api.geonames.org/countryInfoJSON?&username=danielrob', { cache: true}).success(function(data) {
      console.log(data.geonames);
      $scope.countries = data.geonames;
      $scope.loading = false;
