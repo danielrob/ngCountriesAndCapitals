@@ -1,0 +1,32 @@
+body {
+  width: 60%;
+  margin: 0 auto;
+  font-size: 16px;
+  font-family: verdana; }
+
+th {
+  text-align: left; }
+
+h1 {
+  text-align: center; }
+
+li {
+  display: inline;
+  text-decoration: none; }
+
+img {
+  max-width: 110px;
+  max-height: 110px;
+  padding: 20px; }
+
+#ctable {
+  overflow-y: scroll;
+  height: 480px;
+  margin: 20px; }
+
+#country-table tr td:first-child {
+  text-align: right;
+  padding-right: 10px; }
+
+.center {
+  margin-left: 100px; }

@@ -1,0 +1,29 @@
+<p>
+<!-- <pre>{{countries | json }}</pre> -->
+  <div id="ctable">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Country Code</th>
+          <th>Capital</th>
+          <th>Area in km2</th>
+          <th>Population</th>
+          <th>Continent</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="country in countries" ng-click="showCountry(country)">
+          <td>{{country.countryName}}</td>
+          <td>{{country.countryCode}}</td>
+          <td>{{country.capital}}</td>
+          <td>{{country.areaInSqKm | number}}</td>
+          <td>{{country.population | number}}</td>
+          <td>{{country.continentName}}</td>
+        </tr>
+      </tbody>   
+    </table>
+  </div>
+  <a href="#/"><button>Home</button></a>
+</p>
+
