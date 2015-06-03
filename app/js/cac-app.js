@@ -1,5 +1,17 @@
 var app = angular.module('cac', ['ngRoute', 'ngAnimate']);
 
+app.factory('requestService', ['$http', function($http){
+  function buildUrl(query) {
+    return 'http://api.geonames.org/' + query + '&username=danielrob'
+  }
+  return {
+    getCountries : function(){return $http.get(buildUrl('countryInfoJSON?'), { cache: true})},
+    getCountry : function(country){return $http.get(buildUrl('countryInfoJSON?country='+country), {cache: true});},
+    getNeighbours : function(countryGeonameId){return $http.get(buildUrl('neighboursJSON?geonameId='+countryGeonameId), {cache: true});},
+    getCapital : function(capital){return $http.get(buildUrl('searchJSON?q='+capital), {cache: true});}
+  }
+}]);
+
 app.config(['$routeProvider', function($routeProvider){
   $routeProvider
   .when('/', {
@@ -19,25 +31,16 @@ app.config(['$routeProvider', function($routeProvider){
   })
 }]);
 
-app.controller('countryCtrl', ['$http', '$scope', '$q', 'country', function($http, $scope, $q, country) {
+app.controller('countryCtrl', ['$http', '$scope', '$q', 'country', 'requestService', function($http, $scope, $q, country, requestService) {
   $scope.loading = true;
 
-  function getCountry(country){
-    return $http.get('http://api.geonames.org/countryInfoJSON?country='+country+'&username=danielrob', {cache: true});
-  }
-
-  function getNeighbours(countryGeonameId) {
-    return $http.get('http://api.geonames.org/neighboursJSON?geonameId='+$scope.ctry.geonameId+'&username=danielrob', {cache: true});
-  }
-
-  function getCapital(countryGeonameId) {
-    return $http.get('http://api.geonames.org/searchJSON?q='+$scope.ctry.capital+'&username=danielrob', {cache: true});
-  }
-
-  getCountry(country).then(function(response) {
+  requestService.getCountry(country).then(function(response) {
     console.log(response)
     $scope.ctry = response.data.geonames[0];
-    $q.all([getNeighbours(),getCapital()]).then(function(responses){
+    var p1 = requestService.getNeighbours($scope.ctry.geonameId); 
+    var p2 = requestService.getCapital($scope.ctry.capital);
+
+    $q.all([p1,p2]).then(function(responses){
       console.log(responses[0])
       console.log(responses[1])
       $scope.ctry.neighbours = responses[0].geonames;
@@ -49,11 +52,11 @@ app.controller('countryCtrl', ['$http', '$scope', '$q', 'country', function($htt
 
 }]);
 
-app.controller('default', ['$scope', '$http', '$location', function($scope, $http, $location){ 
+app.controller('default', ['$scope', '$http', '$location', 'requestService', function($scope, $http, $location, requestService){ 
   $scope.loading = true;
-  $http.get('http://api.geonames.org/countryInfoJSON?&username=danielrob', { cache: true}).success(function(data) {
-     console.log(data.geonames);
-     $scope.countries = data.geonames;
+  requestService.getCountries().then(function(data) {
+     console.log(data.data.geonames);
+     $scope.countries = data.data.geonames;
      $scope.loading = false;
   });
   $scope.showCountry = function(country) {
