@@ -38,3 +38,16 @@ img {
 .center {
   margin-left: 100px;
 }
+
+.animate.ng-enter {
+  opacity:0;
+}
+
+.animate.ng-enter.ng-enter-active {
+  opacity:1;
+}
+
+.animate.ng-enter {
+  -webkit-transition:all linear 0.5s;
+  transition:all linear 0.5s;
+}

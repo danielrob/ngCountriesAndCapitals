@@ -1,5 +1,4 @@
-<p>
-<!-- <pre>{{countries | json }}</pre> -->
+<div ng-if="!loading" class="animate">
   <div id="ctable">
     <table>
       <thead>
@@ -25,5 +24,8 @@
     </table>
   </div>
   <a href="#/"><button>Home</button></a>
-</p>
+</div>
 
+<div ng-if="loading">
+  <p>Loading...</p>
+</div>

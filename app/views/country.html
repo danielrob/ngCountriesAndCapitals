@@ -1,28 +1,34 @@
-<h2>{{ctry.countryName}}</h2>
-<table>
-  <tr>
-    <td>Population of Country:</td><td>{{ctry.population | number}}</td>
-  </tr>
-  <tr>
-    <td>Area:</td><td>{{ctry.areaInSqKm | number}}</td>
-  </tr>
-  <tr>
-    <td>Capital:</td><td>{{ctry.capital}}</td>
-  </tr>
-  <tr>
-    <td>Population of Capital</td><td>{{ctry.capitalresolved.population | number}} ({{ctry.capitalresolved.name}})</td>
-  </tr>
-  <tr ng-if="ctry.neighbours.length">
-    <td>{{ctry.neighbours.length}} neighbours:</td>
-    <td>
-      <li ng-repeat="neighbour in ctry.neighbours"><a href="" ng-click="showCountry(neighbour)">{{neighbour.name}}</a>{{$last ? '' : ', '}}</li>
-    </td>
-  </tr>
-  <tr>
-    <td><img id='myImage' src="http://www.geonames.org/img/country/250/{{ctry.countryCode | uppercase}}.png" /></td>
-    <td><img ng-src="http://www.geonames.org/flags/x/{{ctry.countryCode |lowercase}}.gif" /></td>
-  </tr>
-</table>
-<p class="center">
-<a href="#/"><button>Home</button></a><a href="#/countries"><button>Browse Countries</button></a>
-</p>
+<div ng-if="!loading" class="animate">
+  <h2>{{ctry.countryName}}</h2>
+  <table>
+    <tr>
+      <td>Population of Country:</td><td>{{ctry.population | number}}</td>
+    </tr>
+    <tr>
+      <td>Area:</td><td>{{ctry.areaInSqKm | number}}</td>
+    </tr>
+    <tr>
+      <td>Capital:</td><td>{{ctry.capital}}</td>
+    </tr>
+    <tr>
+      <td>Population of Capital</td><td>{{ctry.capitalresolved.population | number}} ({{ctry.capitalresolved.name}})</td>
+    </tr>
+    <tr ng-if="ctry.neighbours.length">
+      <td>{{ctry.neighbours.length}} neighbours:</td>
+      <td>
+        <li ng-repeat="neighbour in ctry.neighbours"><a href="" ng-click="showCountry(neighbour)">{{neighbour.name}}</a>{{$last ? '' : ', '}}</li>
+      </td>
+    </tr>
+    <tr>
+      <td><img id='myImage' ng-src="http://www.geonames.org/img/country/250/{{ctry.countryCode | uppercase}}.png" /></td>
+      <td><img ng-src="http://www.geonames.org/flags/x/{{ctry.countryCode |lowercase}}.gif" /></td>
+    </tr>
+  </table>
+  <p class="center">
+  <a href="#/"><button>Home</button></a><a href="#/countries"><button>Browse Countries</button></a>
+  </p>
+</div>
+
+<div ng-if="loading">
+  <p>Loading....</p>
+</div>
